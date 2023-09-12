@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record id="test_model_action" model="ir.actions.act_window">
+            <field name="name">Accreditamento</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">test_model</field>
+            <field name="context">{'search_default_year_pratica': 1}</field>
+            <field name="context">{'search_default_tipologia_pratica_id': 1}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crea un nuovo record
+                </p>
+            </field>
+        </record>
+
+    <menuitem id="test_model_menu"
+              name="Accreditamento"
+              action="test_model_action"
+              sequence="1"/>
+    <menuitem id="test_model_sub_menu1"
+              name="Pratiche"
+              action="test_model_2_action"
+              parent="test_model_menu"
+              sequence="20"/>
+    </data>
+</odoo>
+
+

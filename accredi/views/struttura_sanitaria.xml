@@ -1,0 +1,54 @@
+<odoo>
+
+    <record id="lista_custom_struttura" model="ir.ui.view">
+        <field name="name">listacustom</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="display_name"/>
+                <field name="struttura_sanitaria"/>
+                <field name="accreditamento"/>
+
+            </tree>
+        </field>
+    </record>
+
+
+
+
+    <record id="test_model_strutturasanitaria_action" model="ir.actions.act_window">
+            <field name="name">Struttura Sanitaria</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="lista_custom_struttura"/>
+    </record>
+
+
+    <menuitem id="test_model_sub_prova"
+              name="Strutture sanitarie"
+              action="test_model_strutturasanitaria_action"
+              parent="test_model_menu"
+              sequence="10"/>
+
+    <record id="struttura_sanitaria_sezione" model="ir.ui.view">
+        <field name="name">sezione_struttura_sanitaria</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+                <page string="Informazioni aggiuntive">
+                    <group>
+                        <field name="struttura_sanitaria" />
+                        <field name="accreditamento"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+
+
+
+</odoo>
