@@ -8,11 +8,10 @@
                 <field name="display_name"/>
                 <field name="struttura_sanitaria"/>
                 <field name="accreditamento"/>
-
+                <field name="is_company" />
             </tree>
         </field>
     </record>
-
 
 
 
@@ -37,10 +36,10 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='sales_purchases']" position="after">
-                <page string="Informazioni aggiuntive">
+                <page string="Informazioni aggiuntive" attrs="{'invisible': [('is_company','=', False)]}">
                     <group>
-                        <field name="struttura_sanitaria" />
-                        <field name="accreditamento"/>
+                        <field name="struttura_sanitaria" readonly="1"/>
+                        <field name="accreditamento" readonly="1"/>
                     </group>
                 </page>
             </xpath>

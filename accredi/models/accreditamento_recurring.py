@@ -7,28 +7,22 @@ class TestModel(models.Model):
     _description = "Test Model"
     _inherit = ['mail.thread','mail.activity.mixin']
 
-    Nome = fields.Char(
-        string="Nome",
-        required=True,
-        help="Inserisci il nome del campo")
-    descri = fields.Text()
-    number = fields.Integer()
-    Codice = fields.Integer(string="ETA")
+
+    descri = fields.Text(string="Descrizione")
     Incremento = fields.Integer(default=0)  # Cambiato in Integer
     identificativo = fields.Char(string="Codice del Record", compute='_compute_display_code', store=True)
     booleano = fields.Boolean()
-    selezione = fields.Char(string='Conferma/rigetta', readonly=True)
     status = fields.Selection([('in_compilazione','In compilazione'),('da_approvare','Da approvare'),
                                ('approvata','Approvata'), ('rifiutato','Cancellata')],
                               string="Status", default="in_compilazione",  tracking=True)
     tipologia_pratica_id = fields.Many2one("pratiche", string="Tipo di pratica")
-    autore_registrazione_id = fields.Many2one("res.users", string="Autore Registrazione", default=lambda self: self.env.user)
-    # Campo name modificato per essere di tipo Char
+    autore_registrazione_id = fields.Many2one("res.users", string="Autore Registrazione" , default=lambda self: self.env.user)
+
     name = fields.Char(string="ID", compute='_compute_name', store=True, readonly=True)
     struttura_sanitaria_id = fields.Many2one('res.partner', string="è una struttura sanitaria?")
     year_pratica = fields.Integer(string="Anno di registrazione", compute='_compute_year_pratica', store=True)
-
-
+    richiedente_id = fields.Many2one("res.partner",  string="Richiedente", domain=[('is_company','=', False),('struttura_sanitaria','=', False)], required=True)
+    struttura_da_accreditare = fields.Many2one("res.partner", string="Struttura da accreditare", domain=[('accreditamento','=', False),('is_company','=',True),('struttura_sanitaria','=', True)], required=True)
 
 
     def pulsante_da_conferma(self):

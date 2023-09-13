@@ -1,97 +1,75 @@
 <odoo>
 
     <!--Questo permette di visualizzare la suddivisione tabellare -->
-<record id="vista_tabellare_view" model="ir.ui.view">
-    <field name="name">Vista</field>
-    <field name="model">test_model</field>
-    <field name="arch" type="xml">
-        <tree>
-            <field name="name" string="Codice del Record"/>
-            <field name="Nome" string="Nome"/>
-            <field name="number"/>
-            <field name="Codice"/>
-            <field name="tipologia_pratica_id"/>
-            <field name="status" string="Stato" widget="badge"
-                    decoration-info="status == 'in_compilazione'"
-                    decoration-warning="status == 'da_approvare'"
-                    decoration-success="status == 'approvata'"
-                    decoration-danger="status == 'rifiutato'" />
+    <record id="vista_tabellare_view" model="ir.ui.view">
+        <field name="name">Vista</field>
+        <field name="model">test_model</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Codice del Record"/>
+                <field name="richiedente_id" context="{'default_is_company': False, 'default_struttura_sanitaria': False}"/>
+                <field name="tipologia_pratica_id"/>
+                <field name="struttura_da_accreditare"/>
+                <field name="status" string="Stato" widget="badge"
+                        decoration-info="status == 'in_compilazione'"
+                        decoration-warning="status == 'da_approvare'"
+                        decoration-success="status == 'approvata'"
+                        decoration-danger="status == 'rifiutato'" />
+            </tree>
+        </field>
+    </record>
 
-        </tree>
-    </field>
+    <record id="form_tabella_view" model="ir.ui.view">
+        <field name="name">Form</field>
+        <field name="model">test_model</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="status" widget="statusbar"
+                            statusbar_visible="in_compilazione,da_approvare,approvata"/>
 
-
-</record>
-
-<record id="form_tabella_view" model="ir.ui.view">
-    <field name="name">Form</field>
-    <field name="model">test_model</field>
-    <field name="arch" type="xml">
-        <form>
-            <header>
-                <field name="status" widget="statusbar"
-                        statusbar_visible="in_compilazione,da_approvare,approvata"/>
-
-                <button name="pulsante_da_conferma" string="Conferma"  type="object" class="btn-primary" attrs="{'invisible':[('status', '!=', 'in_compilazione')]}"/>
-                <button name="pulsante_per_back" string="Indietro"  type="object" class="btn-primary" attrs="{'invisible':[('status', '!=', 'da_approvare')]}"/>
-                <button name="pulsante_da_approvare" string="Approva!" type="object" class="btn-primary" attrs="{'invisible':[('status', '!=', 'da_approvare')]}"/>
-                <button name="pulsante_rigetto" string="Rifiuta!" type="object" class="btn-primary" confirm="Vuoi davvero rifiutare?" attrs="{'invisible':[('status', '!=', 'da_approvare')]}"/>
-            </header>
-            <sheet>
-                    <group>
+                    <button name="pulsante_da_conferma" string="Conferma"  type="object" class="btn-primary" attrs="{'invisible':[('status', '!=', 'in_compilazione')]}"/>
+                    <button name="pulsante_per_back" string="Indietro"  type="object" class="btn-primary" attrs="{'invisible':[('status', '!=', 'da_approvare')]}"/>
+                    <button name="pulsante_da_approvare" string="Approva!" type="object" class="btn-primary" attrs="{'invisible':[('status', '!=', 'da_approvare')]}"/>
+                    <button name="pulsante_rigetto" string="Rifiuta!" type="object" class="btn-primary" confirm="Vuoi davvero rifiutare?" attrs="{'invisible':[('status', '!=', 'da_approvare')]}"/>
+                </header>
+                <sheet>
                         <group>
-
-                            <field name="Nome" string="Nome" attrs="{'readonly': [('status', '!=' ,'in_compilazione')]}"/>
-                            <field name="autore_registrazione_id" string="Autore registrazione" attrs="{'readonly': True}"/>
-                            <field name="tipologia_pratica_id" attrs="{'readonly': [('status', '!=' ,'in_compilazione')]}"/>
+                            <group>
+                                <field name="autore_registrazione_id" string="Autore registrazione" attrs="{'readonly': True}"/>
+                                <field name="richiedente_id" context="{'default_is_company': False, 'default_struttura_sanitaria': False}" attrs="{'readonly': [('status', '!=' ,'in_compilazione')]}"/>
+                                <field name="struttura_da_accreditare"  attrs="{'readonly': [('status', '!=' ,'in_compilazione')]}"/>
+                            </group>
+                            <group>
+                                <field name="tipologia_pratica_id" attrs="{'readonly': [('status', '!=' ,'in_compilazione')]}"/>
+                                <field name="descri" attrs="{'readonly': [('status', '!=' ,'in_compilazione')]}"/>
+                            </group>
                         </group>
-                        <group>
-                            <field name="number" attrs="{'readonly': [('status', '!=' ,'in_compilazione')]}"/>
-                            <field name="selezione" attrs="{'readonly': [('status', '!=' ,'in_compilazione')]}"/>
-                        </group>
-                    </group>
-            </sheet>
-                    <notebook>
-                        <page string="Descrizione">
-                            <field name="descri"/>
-                        </page>
-                    </notebook>
-            <div class="oe_chatter">
-                        <field name="message_follower_ids" groups="base.group_user"/>
-                        <field name="message_ids"/>
+                </sheet>
+                <div class="oe_chatter">
+                            <field name="message_follower_ids" groups="base.group_user"/>
+                            <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+     <record id="ricerca_tabella_pratiche" model="ir.ui.view">
+        <field name="name">Ricerca_pratiche</field>
+        <field name="model">test_model</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- la string rappresneta il tag del filtro -->
 
 
-            </div>
-
-        </form>
-    </field>
-
-</record>
- <record id="ricerca_tabella_pratiche" model="ir.ui.view">
-    <field name="name">Ricerca_pratiche</field>
-    <field name="model">test_model</field>
-    <field name="arch" type="xml">
-        <search>
-            <!-- la string rappresneta il tag del filtro -->
-            <field name="Nome"
-                   string="NomeGenericoTest"
-                   filter_domain="[('Nome','ilike',self)]"/>
-             <field name="Codice"
-                   string="Codice Postale"
-                   filter_domain="[('Codice'),('ilike'),(self)]"/>
-            <!--Altro esempio di filtro , di tipo, o questo o quello -->
-            <!-- se inserisco un numero la ricerca mi puo
-            evidenziare sia al numero che alla descrizione-->
+                <!--Altro esempio di filtro , di tipo, o questo o quello -->
+                <!-- se inserisco un numero la ricerca mi puo
+                evidenziare sia al numero che alla descrizione-->
 
 
-
-
-            <field name="number" string="NumeroID"
-                   filter_domain="['|',('Nome','ilike',self),('descri','ilike',self)]"/>
-
-        </search>
-    </field>
-</record>
+            </search>
+        </field>
+    </record>
 
     <record id="ricerca_tabella" model="ir.ui.view">
         <field name="name">ricerca_raggruppo_per</field>
@@ -105,4 +83,5 @@
             </search>
         </field>
     </record>
+
 </odoo>
