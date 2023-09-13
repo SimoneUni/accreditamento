@@ -5,10 +5,10 @@
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="display_name"/>
+                <field name="name"/>
                 <field name="struttura_sanitaria"/>
                 <field name="accreditamento"/>
-                <field name="is_company" />
+                <field name="is_company" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -20,6 +20,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_company', '=', True)]</field>
             <field name="view_id" ref="lista_custom_struttura"/>
     </record>
 
@@ -46,6 +47,15 @@
         </field>
     </record>
 
+    <record id="ricerca_stutture_sanitarie" model="ir.ui.view">
+        <field name="name">Filtro_struttura_sanitaria</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Strutture accreditate" name="accreditamento" domain="[('accreditamento', '=', True)]"/>
+            </search>
+        </field>
+    </record>
 
 
 

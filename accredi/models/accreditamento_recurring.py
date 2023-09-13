@@ -21,8 +21,8 @@ class TestModel(models.Model):
     name = fields.Char(string="ID", compute='_compute_name', store=True, readonly=True)
     struttura_sanitaria_id = fields.Many2one('res.partner', string="è una struttura sanitaria?")
     year_pratica = fields.Integer(string="Anno di registrazione", compute='_compute_year_pratica', store=True)
-    richiedente_id = fields.Many2one("res.partner",  string="Richiedente", domain=[('is_company','=', False),('struttura_sanitaria','=', False)], required=True)
-    struttura_da_accreditare = fields.Many2one("res.partner", string="Struttura da accreditare", domain=[('accreditamento','=', False),('is_company','=',True),('struttura_sanitaria','=', True)], required=True)
+    richiedente_id = fields.Many2one("res.partner",  string="Richiedente", domain=[('is_company','=', False),('struttura_sanitaria','=', False)])
+    struttura_da_accreditare = fields.Many2one("res.partner", string="Struttura da accreditare", domain=[('accreditamento','=', False),('is_company','=',True),('struttura_sanitaria','=', True)])
 
 
     def pulsante_da_conferma(self):
@@ -31,6 +31,9 @@ class TestModel(models.Model):
     def pulsante_da_approvare(self):
             self.status = "approvata"
             self.message_post(body="Approvato!")
+            if self.struttura_da_accreditare:
+                self.struttura_da_accreditare.write({'accreditamento': True})
+
     def pulsante_rigetto(self):
             self.status = "rifiutato"
             self.message_post(body="Rifiutato!")
@@ -64,9 +67,6 @@ class TestModel(models.Model):
     def _compute_year_pratica(self):
         for record in self:
             record.year_pratica = fields.Date.today().year
-
-
-
 
 
 

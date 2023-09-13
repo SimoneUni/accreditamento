@@ -7,6 +7,7 @@ class struttura_sanitaria(models.Model):
    accreditamento = fields.Boolean("è accreditata?")
    is_company = fields.Boolean(default=True)
 
+
    @api.onchange('is_company')
    def _onchange_is_company(self):
       if self.is_company:
@@ -18,3 +19,6 @@ class struttura_sanitaria(models.Model):
    def _compute_struttura_sanitaria(self):
       for record in self:
          record.struttura_sanitaria = record.is_company
+
+
+
