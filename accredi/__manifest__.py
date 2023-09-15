@@ -12,6 +12,6 @@
         'views/struttura_sanitaria.xml',
 
     ],
-    'application': True,
-    'icon': 'accredi/static/description/immagine.png'
+    'application': True
+
 }
