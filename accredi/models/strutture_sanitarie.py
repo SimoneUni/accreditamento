@@ -7,7 +7,6 @@ class struttura_sanitaria(models.Model):
    accreditamento = fields.Boolean("è accreditata?")
    is_company = fields.Boolean(default=True)
 
-
    @api.onchange('is_company')
    def _onchange_is_company(self):
       if self.is_company:
@@ -20,5 +19,15 @@ class struttura_sanitaria(models.Model):
       for record in self:
          record.struttura_sanitaria = record.is_company
 
+   @api.model
+   def create(self, vals):
+      # Controlla se il record sta per essere creato come azienda (is_company=True)
+      if vals.get('is_company'):
+         vals['struttura_sanitaria'] = False  # Impostare su False per i nuovi contatti azienda
+      return super(struttura_sanitaria, self).create(vals)
 
-
+   def write(self, vals):
+      # Controlla se il record sta per essere aggiornato con is_company=True
+      if 'is_company' in vals and vals['is_company']:
+         vals['struttura_sanitaria'] = True  # Impostare su True quando si aggiorna un contatto azienda
+      return super(struttura_sanitaria, self).write(vals)

@@ -6,7 +6,7 @@
         <field name="model">test_model</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name" string="Codice del Record"/>
+                <field name="seq_pratiche"/>
                 <field name="richiedente_id" context="{'default_is_company': False, 'default_struttura_sanitaria': False}"/>
                 <field name="tipologia_pratica_id"/>
                 <field name="struttura_da_accreditare"/>
@@ -23,7 +23,7 @@
         <field name="name">Form</field>
         <field name="model">test_model</field>
         <field name="arch" type="xml">
-            <form>
+            <form duplicate="1">
                 <header>
                     <field name="status" widget="statusbar"
                             statusbar_visible="in_compilazione,da_approvare,approvata"/>
@@ -59,6 +59,10 @@
         <field name="model">test_model</field>
         <field name="arch" type="xml">
             <search>
+               <group expand="1" string="Raggruppa per">
+                    <filter string="Anno di registrazione" name="year_pratica" context="{'group_by':'year_pratica'}"/>
+                    <filter string="Tipo di pratica" name="tipologia_pratica_id" context="{'group_by':'tipologia_pratica_id'}"/>
+                </group>
                 <!-- la string rappresneta il tag del filtro -->
 
 
@@ -76,10 +80,7 @@
         <field name="model">test_model</field>
         <field name="arch" type="xml">
             <search>
-                <group expand="1" string="Raggruppa per">
-                    <filter string="Anno di registrazione" name="year_pratica" context="{'group_by':'year_pratica'}"/>
-                    <filter string="Tipo di pratica" name="tipologia_pratica_id" context="{'group_by':'tipologia_pratica_id'}"/>
-                </group>
+
             </search>
         </field>
     </record>

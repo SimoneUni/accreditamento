@@ -1,0 +1,10 @@
+<odoo>
+
+    <record id="accreditamento_sequence" model="ir.sequence">
+        <field name="name">Sequenza</field>
+        <field name="code">test_model</field>
+        <field name="prefix">ACCR/%(year)s/</field>
+        <field name="number_increment" eval="1"/>
+    </record>
+
+</odoo>

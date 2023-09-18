@@ -6,11 +6,11 @@ class TestModel(models.Model):
     _name = 'test_model'
     _description = "Test Model"
     _inherit = ['mail.thread','mail.activity.mixin']
-
+    _rec_name = "seq_pratiche"
 
     descri = fields.Text(string="Descrizione")
     Incremento = fields.Integer(default=0)  # Cambiato in Integer
-    identificativo = fields.Char(string="Codice del Record", compute='_compute_display_code', store=True)
+    #identificativo = fields.Char(string="Codice del Record", compute='_compute_display_code', store=True)
     booleano = fields.Boolean()
     status = fields.Selection([('in_compilazione','In compilazione'),('da_approvare','Da approvare'),
                                ('approvata','Approvata'), ('rifiutato','Cancellata')],
@@ -18,12 +18,12 @@ class TestModel(models.Model):
     tipologia_pratica_id = fields.Many2one("pratiche", string="Tipo di pratica")
     autore_registrazione_id = fields.Many2one("res.users", string="Autore Registrazione" , default=lambda self: self.env.user)
 
-    name = fields.Char(string="ID", compute='_compute_name', store=True, readonly=True)
+    #name = fields.Char(string="ID", compute='_compute_name', store=True, readonly=True)
     struttura_sanitaria_id = fields.Many2one('res.partner', string="è una struttura sanitaria?")
     year_pratica = fields.Integer(string="Anno di registrazione", compute='_compute_year_pratica', store=True)
     richiedente_id = fields.Many2one("res.partner",  string="Richiedente", domain=[('is_company','=', False),('struttura_sanitaria','=', False)])
     struttura_da_accreditare = fields.Many2one("res.partner", string="Struttura da accreditare", domain=[('accreditamento','=', False),('is_company','=',True),('struttura_sanitaria','=', True)])
-
+    seq_pratiche = fields.Char("Codice Pratica")
 
     def pulsante_da_conferma(self):
         self.status="da_approvare"
@@ -48,18 +48,18 @@ class TestModel(models.Model):
             year = fields.Date.today().year  # Ottieni l'anno corrente
             record.identificativo = f'ACR/{year}/{str(record.Incremento).zfill(3)}'
 
-    @api.model
-    def create(self, vals):
-        if vals.get('Incremento', 0) == 0:
+#    @api.model
+#    def create(self, vals):
+#       if vals.get('Incremento', 0) == 0:
             # Trova il massimo valore di Incremento nella tabella
-            max_incremento = self.search([], order="Incremento desc", limit=1)
-            new_incremento = max_incremento.Incremento + 1 if max_incremento else 1
-            vals['Incremento'] = new_incremento
-            vals['name'] = f'ACR/{fields.Date.today().year}/{str(new_incremento).zfill(3)}'
-        else:
-            vals['name'] = f'ACR/{fields.Date.today().year}/{str(vals["Incremento"]).zfill(3)}'
+#            max_incremento = self.search([], order="Incremento desc", limit=1)
+#            new_incremento = max_incremento.Incremento + 1 if max_incremento else 1
+#            vals['Incremento'] = new_incremento
+#            vals['name'] = f'ACR/{fields.Date.today().year}/{str(new_incremento).zfill(3)}'
+#        else:
+#            vals['name'] = f'ACR/{fields.Date.today().year}/{str(vals["Incremento"]).zfill(3)}'
 
-        return super(TestModel, self).create(vals)
+#        return super(TestModel, self).create(vals)
 
     def message_post(self, body):
         pass
@@ -68,5 +68,20 @@ class TestModel(models.Model):
         for record in self:
             record.year_pratica = fields.Date.today().year
 
+    @api.model
+    def create(self,vals):
+        vals["seq_pratiche"] = self.env["ir.sequence"].next_by_code("test_model")
+        return super(TestModel, self).create(vals)
 
+    def copy(self, default=None):
+        default = dict(default or {})
 
+        # Riporta il nuovo record alla fase di compilazione
+        default['status'] = 'in_compilazione'
+
+        # Copia il valore dell'Autore Registrazione e del Richiedente
+        default['autore_registrazione_id'] = self.autore_registrazione_id.id
+        default['richiedente_id'] = self.richiedente_id.id
+        if self.status != 'in_compilazione':
+            default['tipologia_pratica_id'] = False
+        return super(TestModel, self).copy(default)

@@ -10,6 +10,7 @@
         'views/vista_tabellare_view.xml',
         'views/tabella_many2one.xml',
         'views/struttura_sanitaria.xml',
+        'data/accreditamento_data.xml'
 
     ],
     'application': True
